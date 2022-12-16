@@ -23,7 +23,10 @@ class SicXE:
         self.arr = []
         self.addresses = []
         self.lengths = []
+        self.modified_rows = []
+        self.modified_cols = []
         self.tRecs = ""
+        self.unique_index = []
         self.df = None
         self.start = None
         self.name = None
@@ -31,6 +34,7 @@ class SicXE:
         self.label = None
         self.operator = None
         self.value = None
+        self.colored = {}
         self.firstChar = ""
         menu = Tk()
         menu.geometry("900x500")
@@ -97,15 +101,15 @@ class SicXE:
                                                                                                           "").zfill(
                     6).upper()
         self.labelsDf = pd.DataFrame.from_dict(self.estab, orient='index')
-        # root = Tk()
-        # root.geometry("600x300")
-        # root.title("External Symbol Table Example")
-        # frame = Frame(root)
-        # frame.pack(fill="both", expand=True)
-        # table = Table(frame, dataframe=self.labelsDf)
-        # table.show()
-        # table.showindex = True
-        # root.mainloop()
+        root = Tk()
+        root.geometry("600x300")
+        root.title("External Symbol Table Example")
+        frame = Frame(root)
+        frame.pack(fill="both", expand=True)
+        table = Table(frame, dataframe=self.labelsDf)
+        table.show()
+        table.showindex = True
+        root.mainloop()
 
     def set_addresses(self):
         hteRec = open(self.filepath, "r")
@@ -139,6 +143,7 @@ class SicXE:
         mem = mem.astype(str)
         self.df = pd.DataFrame(np.zeros((len(mem_addresses), 16)), index=mem_hex_addresses, columns=np.arange(0, 16))
         self.df = self.df.astype(str)
+        self.unique_index = pd.Index(mem_hex_addresses)
 
     def load_data(self):
         i = 0
@@ -173,12 +178,28 @@ class SicXE:
                 self.operator = line[9:10]
                 self.label = line[10:].strip()
                 if col < 14:
+                    if self.unique_index.get_loc(row) in self.colored:
+                        self.colored[self.unique_index.get_loc(row)].extend([col, col + 1, col + 2])
+                    else:
+                        self.colored[self.unique_index.get_loc(row)] = [col, col + 1, col + 2]
                     self.value = str(self.df.loc[row, col]) + str(self.df.loc[row, col + 1]) + str(
                         self.df.loc[row, col + 2])
                 elif col == 14:
+                    if self.unique_index.get_loc(row) in self.colored:
+                        self.colored[self.unique_index.get_loc(row)].extend([col, col + 1])
+                    else:
+                        self.colored[self.unique_index.get_loc(row)] = [col, col + 1]
+                    self.colored[
+                        self.unique_index.get_loc(hex(int(row, 16) + 16).replace("0x", "").zfill(6).upper())] = [0]
                     self.value = str(self.df.loc[row, col]) + str(self.df.loc[row, col + 1]) + str(
                         self.self.df.loc[hex(int(row, 16) + 16).replace("0x", "").zfill(6).upper(), 0])
                 elif col == 15:
+                    if self.unique_index.get_loc(row) in self.colored:
+                        self.colored[self.unique_index.get_loc(row)].extend([col])
+                    else:
+                        self.colored[self.unique_index.get_loc(row)] = [col]
+                    self.colored[
+                        self.unique_index.get_loc(hex(int(row, 16) + 16).replace("0x", "").zfill(6).upper())] = [0, 1]
                     self.value = str(self.df.loc[row, col]) + str(
                         self.df.loc[hex(int(row, 16) + 16).replace("0x", "").zfill(6).upper(), 0]) + str(
                         self.df.loc[hex(int(row, 16) + 16).replace("0x", "").zfill(6).upper(), 1])
@@ -186,12 +207,17 @@ class SicXE:
                     self.firstChar = self.value[0]
                     self.value = self.value[1:]
                 for k, v in self.estab.items():
+                    if k == self.label:
+                        self.found_address = self.estab[k]['address']
+                        break
                     for dk, dv in v['definitions'].items():
                         if dk == self.label:
                             self.found_address = dv
                             break
                 if self.operator == "+":
-                    self.value = self.firstChar + hex(int(self.value, 16) + int(self.found_address, 16)).replace("0x", "").zfill(6).upper()[-int(length):]
+                    self.value = self.firstChar + hex(int(self.value, 16) + int(self.found_address, 16)).replace("0x",
+                                                                                                                 "").zfill(
+                        6).upper()[-int(length):]
                 if self.operator == "-":
                     y = int(self.value, 16) - int(self.found_address, 16)
                     self.value = self.firstChar + to_hex(y, 32).replace("0x", "").zfill(6).upper()[-int(length):]
@@ -219,4 +245,7 @@ class SicXE:
         table = Table(frame, dataframe=self.df, width=500, maxcellwidth=30)
         table.show()
         table.showindex = True
+        for k, v in self.colored.items():
+            print(k,v)
+            table.setRowColors(rows=[k], cols=v, clr='#ADD8E6')
         root.mainloop()
