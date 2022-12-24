@@ -70,6 +70,8 @@ Project Installation
 
 ## Linker 
 
+Memory after modifications
+
 ![unnamed (5)](https://user-images.githubusercontent.com/71923204/209451227-090fcc14-ea8c-426c-9180-7f2af7e43d32.png)
 
 
