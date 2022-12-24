@@ -70,16 +70,18 @@ class SicXE:
         menu = Tk()
         menu.geometry("900x500")
         menu.title("Absolute Loader")
-        labelframe = LabelFrame(menu, text="GENERATE LINKING LOADER FROM SIC-XE PROGRAM", font=("Arial", 16),
-                                padx=50, pady=50)
+        labelframe = LabelFrame(menu, text="GENERATE LINKING LOADER FROM SIC-XE PROGRAM", font=("Arial", 24),
+                                padx=100, pady=100)
         labelframe.pack()
         Label(labelframe, text="Enter starting address").pack()
         self.starting_address_entry = Entry(labelframe)
         self.starting_address_entry.pack()
-        Button(labelframe, text="Confirm address", command=self.setEntry).pack()
         Label(labelframe, text="Import HDRTME file .txt").pack()
         button = Button(labelframe, text="Browse a file", command=self.openfile)
         button.pack()
+        Button(labelframe, text="View Symbol Table", command=self.estab_window).pack()
+        Button(labelframe, text="Linker", command=self.generate_table).pack()
+
         menu.mainloop()
         self.starting_address = self.starting_address_entry.get()
 
@@ -91,7 +93,6 @@ class SicXE:
         self.generate_memory()
         self.load_data()
         self.modify_data()
-        self.generate_table()
 
     def setEntry(self):
         self.starting_address = self.starting_address_entry.get()
@@ -133,7 +134,6 @@ class SicXE:
                     6).upper()
         self.labelsDf = pd.DataFrame.from_dict(self.estab, orient='index')
         self.labelsDf.to_csv("estable.txt", encoding=None, index=True, sep=' ')
-        self.estab_window()
 
     def estab_window(self):
         root = Tk()
@@ -274,4 +274,4 @@ class SicXE:
             value = str(self.df.loc[row, col]) + str(
                 self.df.loc[hex(int(row, 16) + 16).replace("0x", "").zfill(6).upper(), 0]) + str(
                 self.df.loc[hex(int(row, 16) + 16).replace("0x", "").zfill(6).upper(), 1])
-        return value ;
+        return value;
