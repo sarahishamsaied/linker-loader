@@ -10,7 +10,7 @@
 
 4 - [Sample Run](#sample-run).
 
-4 - [Sample Run](#contributors).
+5 - [Contributors](#contributors).
 
 
 
@@ -46,6 +46,30 @@ Project Installation
       pip install pandas
       pip install tkinter
       pip install pandastable
+      
+      
+ # How to Launch
+ You can open the project with your preferred IDE or you can create an executable file and you can open it any time with just one click.
+ 
+ Let's begin by creating an executable file.
+ 
+ 1 - Go to the Command Prompt, and then type:
+ 
+       pip install pyinstaller
+       
+       cd ` followed by the location where your Python script is stored ` 
+       
+       pyinstaller --onefile main.py
+       
+2 - Click on dist folder located in the root directory
+
+![unnamed (6)](https://user-images.githubusercontent.com/71923204/209451515-9061d7b6-9450-4b54-b359-0313ea195ba9.png)
+
+3 - Click on main.exe
+ 
+![unnamed (7)](https://user-images.githubusercontent.com/71923204/209451521-0df900ec-fa33-40a7-b97b-9d6ae2bfa68d.png)
+
+
       
  ## Sample Run
  
