@@ -76,6 +76,7 @@ class SicXE:
         Label(labelframe, text="Enter starting address").pack()
         self.starting_address_entry = Entry(labelframe)
         self.starting_address_entry.pack()
+        Button(labelframe, text="Confirm address", command=self.setEntry).pack()
         Label(labelframe, text="Import HDRTME file .txt").pack()
         button = Button(labelframe, text="Browse a file", command=self.openfile)
         button.pack()
@@ -84,6 +85,7 @@ class SicXE:
 
         menu.mainloop()
         self.starting_address = self.starting_address_entry.get()
+        print("starting address",self.starting_address)
 
     def openfile(self):
         file = filedialog.askopenfile(mode="r", filetypes=[("Text Files", "*.txt")])
