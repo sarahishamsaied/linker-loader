@@ -1,4 +1,4 @@
-# Absolute Linker & Loader
+# Absolute Loader & Linker  
 
 ## Table of Content
 
