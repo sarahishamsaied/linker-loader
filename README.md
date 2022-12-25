@@ -69,7 +69,9 @@ Project Installation
  
 ![unnamed (7)](https://user-images.githubusercontent.com/71923204/209451521-0df900ec-fa33-40a7-b97b-9d6ae2bfa68d.png)
 
+Or you can simply type
 
+            python main.py
       
  ## Sample Run
  
